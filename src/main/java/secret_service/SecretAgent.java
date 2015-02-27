@@ -2,7 +2,6 @@ package secret_service;
 
 import java.util.Date;
 
-/*Hello there sweetheart*/
 /**
  * Created by Vitus-ad on 26. 2. 2015.
  */
