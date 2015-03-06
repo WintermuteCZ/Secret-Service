@@ -1,26 +1,26 @@
 package secret_service;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * Created by Vitus-ad on 26. 2. 2015.
  */
 public class Mission {
-    private Long id;
+    private long id;
     private String title;
     private String country;
     private String description;
-    private java.util.Date dateOfCompletion;
-
+    private LocalDate dateOfCompletion;
+    private int requiredClearance;
     public Mission() {
 
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -48,11 +48,19 @@ public class Mission {
         this.description = description;
     }
 
-    public Date getDateOfCompletion() {
+    public LocalDate getDateOfCompletion() {
         return dateOfCompletion;
     }
 
-    public void setDateOfCompletion(Date dateOfCompletion) {
+    public void setDateOfCompletion(LocalDate dateOfCompletion) {
         this.dateOfCompletion = dateOfCompletion;
+    }
+
+    public int getRequiredClearance() {
+        return requiredClearance;
+    }
+
+    public void setRequiredClearance(int requiredClearance) {
+        this.requiredClearance = requiredClearance;
     }
 }
