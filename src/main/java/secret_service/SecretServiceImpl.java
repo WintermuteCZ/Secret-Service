@@ -26,7 +26,7 @@ public class SecretServiceImpl implements SecretService {
     }
 
     @Override
-    public Agent findAgentOnMission(Mission mission) {
+    public SecretAgent findAgentOnMission(Mission mission) {
         return null;
     }
 }
