@@ -1,27 +1,27 @@
 package secret_service;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * Created by Vitus-ad on 26. 2. 2015.
  */
 public class SecretAgent {
 
-    Long id;
+    private long id;
     private String name;
     private String gender;
-    private java.util.Date dateOfBirth;
-    private java.util.Date dateOfDeath;
-
+    private LocalDate dateOfBirth;
+    private LocalDate dateOfDeath;
+    private int clearanceLevel;
 
     public SecretAgent() {
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -41,19 +41,29 @@ public class SecretAgent {
         this.gender = gender;
     }
 
-    public Date getDateOfBirth() {
+    public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
+    public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public Date getDateOfDeath() {
+    public LocalDate getDateOfDeath() {
         return dateOfDeath;
     }
 
-    public void setDateOfDeath(Date dateOfDeath) {
+    public void setDateOfDeath(LocalDate dateOfDeath) {
         this.dateOfDeath = dateOfDeath;
     }
+
+
+    public int getClearanceLevel() {
+        return clearanceLevel;
+    }
+
+    public void setClearanceLevel(int clearanceLevel) {
+        this.clearanceLevel = clearanceLevel;
+    }
+
 }

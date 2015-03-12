@@ -10,6 +10,6 @@ public interface SecretService {
 
     Mission findMissionWithAgent(SecretAgent secretAgent);
 
-    Agent findAgentOnMission(Mission mission);
+    SecretAgent findAgentOnMission(Mission mission);
 
 }
