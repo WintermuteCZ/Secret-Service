@@ -19,7 +19,7 @@ public class AgentManagerTest {
 
     @Test
     public void RetrievableAgentTest() {
-        SecretAgent agent = newSecretAgent(007L,"Bond", "male", LocalDate.of(1953,5,6), 10);
+        SecretAgent agent = newSecretAgent(007,"Bond", "male", LocalDate.of(1953,5,6), 10);
         agentManager.createAgent(agent);
 
         Collection<SecretAgent> list =  agentManager.findAllAgents();
@@ -31,11 +31,11 @@ public class AgentManagerTest {
 
     @Test
     public void FindAliveAgentTest() {
-        SecretAgent agent = newSecretAgent(007L,"Bond", "male", LocalDate.of(1953,5,6), 10);
+        SecretAgent agent = newSecretAgent(007,"Bond", "male", LocalDate.of(1953,5,6), 10);
         agent.setDateOfDeath(LocalDate.of(2012, 5, 3));
         agentManager.createAgent(agent);
 
-        SecretAgent agent2 = newSecretAgent(123L,"John", "male", LocalDate.of(1963,5,6), 1);
+        SecretAgent agent2 = newSecretAgent(123,"John", "male", LocalDate.of(1963,5,6), 1);
         agentManager.createAgent(agent2);
 
         Collection<SecretAgent> list = agentManager.findAliveAgents();
@@ -45,7 +45,7 @@ public class AgentManagerTest {
 
     @Test
     public void DeleteAgentTest() {
-        SecretAgent agent = newSecretAgent(007L,"Bond", "male", LocalDate.of(1953,5,6), 10);
+        SecretAgent agent = newSecretAgent(007,"Bond", "male", LocalDate.of(1953,5,6), 10);
         agentManager.createAgent(agent);
         agentManager.deleteAgent(agent);
         assertFalse(agentManager.findAllAgents().contains(agent));
@@ -53,7 +53,7 @@ public class AgentManagerTest {
 
     @Test
     public void DeleteAgentWrongAttributesTest() {
-        SecretAgent agent = newSecretAgent(123L,"John", "male", LocalDate.of(1963,5,6), 1);
+        SecretAgent agent = newSecretAgent(123,"John", "male", LocalDate.of(1963,5,6), 1);
         agentManager.createAgent(agent);
 
         try {
@@ -64,7 +64,7 @@ public class AgentManagerTest {
         }
 
         try {
-            agent.setId(321L);
+            agent.setId(321);
             agentManager.deleteAgent(agent);
             fail();
         }
@@ -75,7 +75,7 @@ public class AgentManagerTest {
 
     @Test
     public void UpdateAgentTest() {
-        SecretAgent agent = newSecretAgent(120L,"John", "male", LocalDate.of(1963,5,6), 1);
+        SecretAgent agent = newSecretAgent(120,"John", "male", LocalDate.of(1963,5,6), 1);
         agentManager.createAgent(agent);
         long id = agent.getId();
 
@@ -122,7 +122,7 @@ public class AgentManagerTest {
     }
 
 
-    private static SecretAgent newSecretAgent(Long id, String name, String gender, LocalDate dateOfBirth, int clearanceLevel) {
+    private static SecretAgent newSecretAgent(long id, String name, String gender, LocalDate dateOfBirth, int clearanceLevel) {
         SecretAgent agent = new SecretAgent();
         agent.setId(id);
         agent.setName(name);
