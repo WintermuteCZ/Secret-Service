@@ -7,7 +7,6 @@ import java.time.LocalDate;
 import java.util.Collection;
 
 import static org.junit.Assert.*;
-
 public class AgentManagerTest {
 
     AgentManager agentManager;
@@ -18,24 +17,24 @@ public class AgentManagerTest {
     }
 
     @Test
-    public void RetrievableAgentTest() {
-        SecretAgent agent = newSecretAgent(007,"Bond", "male", LocalDate.of(1953,5,6), 10);
+    public void retrievableAgentTest() {
+        SecretAgent agent = newSecretAgent(null,"Bond", "male", LocalDate.of(1953,5,6), 10);
         agentManager.createAgent(agent);
 
         Collection<SecretAgent> list =  agentManager.findAllAgents();
         assertTrue(list.contains(agent));
 
-        long id = agent.getId();
+        Long id = agent.getId();
         assertEquals(agent, agentManager.findAgentByID(id));
     }
 
     @Test
-    public void FindAliveAgentTest() {
-        SecretAgent agent = newSecretAgent(007,"Bond", "male", LocalDate.of(1953,5,6), 10);
+    public void findAliveAgentTest() {
+        SecretAgent agent = newSecretAgent(null,"Bond", "male", LocalDate.of(1953,5,6), 10);
         agent.setDateOfDeath(LocalDate.of(2012, 5, 3));
         agentManager.createAgent(agent);
 
-        SecretAgent agent2 = newSecretAgent(123,"John", "male", LocalDate.of(1963,5,6), 1);
+        SecretAgent agent2 = newSecretAgent(null,"John", "male", LocalDate.of(1963,5,6), 1);
         agentManager.createAgent(agent2);
 
         Collection<SecretAgent> list = agentManager.findAliveAgents();
@@ -44,16 +43,16 @@ public class AgentManagerTest {
     }
 
     @Test
-    public void DeleteAgentTest() {
-        SecretAgent agent = newSecretAgent(007,"Bond", "male", LocalDate.of(1953,5,6), 10);
+    public void deleteAgentTest() {
+        SecretAgent agent = newSecretAgent(null,"Bond", "male", LocalDate.of(1953,5,6), 10);
         agentManager.createAgent(agent);
         agentManager.deleteAgent(agent);
         assertFalse(agentManager.findAllAgents().contains(agent));
     }
 
     @Test
-    public void DeleteAgentWrongAttributesTest() {
-        SecretAgent agent = newSecretAgent(123,"John", "male", LocalDate.of(1963,5,6), 1);
+    public void deleteAgentWrongAttributesTest() {
+        SecretAgent agent = newSecretAgent(null,"John", "male", LocalDate.of(1963,5,6), 1);
         agentManager.createAgent(agent);
 
         try {
@@ -61,68 +60,54 @@ public class AgentManagerTest {
             fail();
         }
         catch (IllegalArgumentException e) {
+            //OK
         }
 
         try {
-            agent.setId(321);
+            agent.setId(321L);
             agentManager.deleteAgent(agent);
             fail();
         }
         catch (IllegalArgumentException e) {
+            //OK
         }
 
     }
 
     @Test
-    public void UpdateAgentTest() {
-        SecretAgent agent = newSecretAgent(120,"John", "male", LocalDate.of(1963,5,6), 1);
+    public void updateAgentTest() {
+        SecretAgent agent = newSecretAgent(null,"John", "male", LocalDate.of(1963,5,6), 1);
         agentManager.createAgent(agent);
-        long id = agent.getId();
+        Long id = agent.getId();
 
-        agent = agentManager.findAgentByID(id);
         agent.setClearanceLevel(2);
         agentManager.updateAgent(agent);
-        assertEquals("John", agent.getName());
-        assertEquals("male", agent.getGender());
-        assertEquals(LocalDate.of(1963,5,6), agent.getDateOfBirth());
-        assertNull(agent.getDateOfDeath());
+        agent = agentManager.findAgentByID(id);
         assertEquals(2, agent.getClearanceLevel());
 
-        agent = agentManager.findAgentByID(id);
+
         agent.setGender("female");
         agentManager.updateAgent(agent);
-        assertEquals("John", agent.getName());
-        assertEquals("female", agent.getGender());
-        assertEquals(LocalDate.of(1963,5,6), agent.getDateOfBirth());
-        assertNull(agent.getDateOfDeath());
-        assertEquals(2, agent.getClearanceLevel());
-
-
         agent = agentManager.findAgentByID(id);
+        assertEquals("female", agent.getGender());
+
+
         agent.setDateOfBirth(LocalDate.of(1953, 5, 6));
         agentManager.updateAgent(agent);
-        assertEquals("John", agent.getName());
-        assertEquals("female", agent.getGender());
-        assertEquals(LocalDate.of(1953,5,6), agent.getDateOfBirth());
-        assertNull(agent.getDateOfDeath());
-        assertEquals(2, agent.getClearanceLevel());
-
-
         agent = agentManager.findAgentByID(id);
+        assertEquals(LocalDate.of(1953,5,6), agent.getDateOfBirth());
+
+
         agent.setDateOfDeath(LocalDate.of(1993, 5, 6));
         agentManager.updateAgent(agent);
-        assertEquals("John", agent.getName());
-        assertEquals("female", agent.getGender());
-        assertEquals(LocalDate.of(1953,5,6), agent.getDateOfBirth());
-        assertNotNull(agent.getDateOfDeath());
+        agent = agentManager.findAgentByID(id);
         assertEquals(LocalDate.of(1993,5,6),agent.getDateOfDeath());
-        assertEquals(2, agent.getClearanceLevel());
 
 
     }
 
 
-    private static SecretAgent newSecretAgent(long id, String name, String gender, LocalDate dateOfBirth, int clearanceLevel) {
+    private static SecretAgent newSecretAgent(Long id, String name, String gender, LocalDate dateOfBirth, int clearanceLevel) {
         SecretAgent agent = new SecretAgent();
         agent.setId(id);
         agent.setName(name);

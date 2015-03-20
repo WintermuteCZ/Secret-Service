@@ -7,7 +7,7 @@ import java.time.LocalDate;
  */
 public class SecretAgent {
 
-    private long id;
+    private Long id;
     private String name;
     private String gender;
     private LocalDate dateOfBirth;
@@ -17,11 +17,11 @@ public class SecretAgent {
     public SecretAgent() {
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

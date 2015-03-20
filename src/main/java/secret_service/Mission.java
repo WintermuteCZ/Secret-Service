@@ -6,7 +6,7 @@ import java.time.LocalDate;
  * Created by Vitus-ad on 26. 2. 2015.
  */
 public class Mission {
-    private long id;
+    private Long id;
     private String title;
     private String country;
     private String description;
@@ -16,11 +16,11 @@ public class Mission {
 
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
