@@ -6,21 +6,22 @@ import java.time.LocalDate;
  * Created by Vitus-ad on 26. 2. 2015.
  */
 public class Mission {
-    private long id;
+    private Long id;
     private String title;
     private String country;
     private String description;
     private LocalDate dateOfCompletion;
     private int requiredClearance;
+
     public Mission() {
 
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -62,5 +63,22 @@ public class Mission {
 
     public void setRequiredClearance(int requiredClearance) {
         this.requiredClearance = requiredClearance;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Mission)) return false;
+
+        Mission mission = (Mission) o;
+
+        if (!id.equals(mission.id)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
     }
 }
