@@ -17,6 +17,15 @@ public class SecretAgent {
     public SecretAgent() {
     }
 
+    public SecretAgent(Long id, String name, String gender, LocalDate dateOfBirth, LocalDate dateOfDeath, int clearanceLevel) {
+        this.id = id;
+        this.name = name;
+        this.gender = gender;
+        this.dateOfBirth = dateOfBirth;
+        this.dateOfDeath = dateOfDeath;
+        this.clearanceLevel = clearanceLevel;
+    }
+
     public Long getId() {
         return id;
     }

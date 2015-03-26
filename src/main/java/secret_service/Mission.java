@@ -17,6 +17,15 @@ public class Mission {
 
     }
 
+    public Mission(Long id, String title, String country, String description, LocalDate dateOfCompletion, int requiredClearance) {
+        this.id = id;
+        this.title = title;
+        this.country = country;
+        this.description = description;
+        this.dateOfCompletion = dateOfCompletion;
+        this.requiredClearance = requiredClearance;
+    }
+
     public Long getId() {
         return id;
     }

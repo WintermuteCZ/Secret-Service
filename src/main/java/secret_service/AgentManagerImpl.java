@@ -6,10 +6,14 @@ import org.slf4j.LoggerFactory;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Vitus-ad on 26. 2. 2015.
+ *
+ * logy? imho spatne
  */
 public class AgentManagerImpl implements AgentManager {
 
@@ -47,7 +51,7 @@ public class AgentManagerImpl implements AgentManager {
         }
 
         try (Connection conn = dataSource.getConnection()) {
-            try (PreparedStatement st = conn.prepareStatement("INSERT INTO AGENT (name,gender,clearance,birth,death) VALUES (?,?,?,?,?)",
+            try (PreparedStatement st = conn.prepareStatement("INSERT INTO agent (name,gender,clearance,birth,death) VALUES (?,?,?,?,?)",
                     Statement.RETURN_GENERATED_KEYS)) {
                 st.setString(1, secretAgent.getName());
                 st.setString(2, secretAgent.getGender());
@@ -144,7 +148,7 @@ public class AgentManagerImpl implements AgentManager {
             throw new IllegalArgumentException("agent with null id cannot be deleted");
         }
         try (Connection conn = dataSource.getConnection()) {
-            try(PreparedStatement st = conn.prepareStatement("DELETE FROM grave WHERE id=?")) {
+            try(PreparedStatement st = conn.prepareStatement("DELETE FROM agent WHERE id=?")) {
                 st.setLong(1,secretAgent.getId());
                 if(st.executeUpdate()!=1) {
                     throw new ServiceFailureException("did not delete agent with id ="+secretAgent.getId());
@@ -156,18 +160,65 @@ public class AgentManagerImpl implements AgentManager {
         }
     }
 
+    private SecretAgent resultSetToAgent(ResultSet rs) throws SQLException {
+        SecretAgent agent = new SecretAgent();
+        agent.setId(rs.getLong("id"));
+        agent.setName(rs.getString("name"));
+        agent.setGender(rs.getString("gender"));
+        agent.setClearanceLevel(rs.getInt("clearance"));
+        Date birth = rs.getDate("birth");
+        agent.setDateOfBirth(birth.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        Date death = rs.getDate("death");
+        agent.setDateOfBirth(death.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        return agent;
+    }
+
     @Override
     public List<SecretAgent> findAllAgents() {
-        return null;
+        try (Connection conn = dataSource.getConnection()) {
+            try (PreparedStatement st = conn.prepareStatement("SELECT id,name,gender,clearance,birth,death FROM agent")) {
+                ResultSet rs = st.executeQuery();
+                List<SecretAgent> result = new ArrayList<>();
+                while (rs.next()) {
+                    result.add(resultSetToAgent(rs));
+                }
+                return result;
+            }
+        } catch (SQLException ex) {
+            log.error("db connection problem", ex);
+            throw new ServiceFailureException("Error when retrieving all agents", ex);
+        }
     }
 
     @Override
     public List<SecretAgent> findAliveAgents() {
-        return null;
+        try (Connection conn = dataSource.getConnection()) {
+            try (PreparedStatement st = conn.prepareStatement("SELECT id,name,gender,clearance,birth,death FROM agent WHERE death IS NULL")) {
+                ResultSet rs = st.executeQuery();
+                List<SecretAgent> result = new ArrayList<>();
+                while (rs.next()) {
+                    result.add(resultSetToAgent(rs));
+                }
+                return result;
+            }
+        } catch (SQLException ex) {
+            log.error("db connection problem", ex);
+            throw new ServiceFailureException("Error when retrieving all agents", ex);
+        }
     }
 
     @Override
     public SecretAgent findAgentByID(Long id) {
-        return null;
+        try (Connection conn = dataSource.getConnection()) {
+            try (PreparedStatement st = conn.prepareStatement("SELECT id,name,gender,clearance,birth,death FROM agent WHERE id=?")) {
+                st.setLong(1, id);
+                ResultSet rs = st.executeQuery();
+                SecretAgent agent = resultSetToAgent(rs);
+                return agent;
+            }
+        } catch (SQLException ex) {
+            log.error("db connection problem", ex);
+            throw new ServiceFailureException("Error when retrieving all agents", ex);
+        }
     }
 }

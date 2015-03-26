@@ -2,6 +2,8 @@ package secret_service;
 
 /**
  * Created by Martina on 26.3.2015.
+ *
+ * What a boring name, but as you wish :D
  */
 public class ServiceFailureException extends RuntimeException {
 
