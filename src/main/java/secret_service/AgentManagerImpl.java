@@ -13,7 +13,6 @@ import java.util.List;
 /**
  * Created by Vitus-ad on 26. 2. 2015.
  *
- * logy? imho spatne
  */
 public class AgentManagerImpl implements AgentManager {
 
@@ -46,8 +45,10 @@ public class AgentManagerImpl implements AgentManager {
         if (secretAgent.getDateOfBirth() == null) {
             throw new IllegalArgumentException("date of birth is null");
         }
-        if (secretAgent.getDateOfDeath().isBefore(secretAgent.getDateOfBirth())) {
-            throw new IllegalArgumentException("date of death is before date of birth");
+        if (secretAgent.getDateOfDeath() != null) {
+            if (secretAgent.getDateOfDeath().isBefore(secretAgent.getDateOfBirth())) {
+                throw new IllegalArgumentException("date of death is before date of birth");
+            }
         }
 
         try (Connection conn = dataSource.getConnection()) {
@@ -115,8 +116,10 @@ public class AgentManagerImpl implements AgentManager {
         if (secretAgent.getDateOfBirth() == null) {
             throw new IllegalArgumentException("date of birth is null");
         }
-        if (secretAgent.getDateOfDeath().isBefore(secretAgent.getDateOfBirth())) {
-            throw new IllegalArgumentException("date of death is before date of birth");
+        if (secretAgent.getDateOfDeath() != null) {
+            if (secretAgent.getDateOfDeath().isBefore(secretAgent.getDateOfBirth())) {
+                throw new IllegalArgumentException("date of death is before date of birth");
+            }
         }
 
         try (Connection conn = dataSource.getConnection()) {
@@ -167,9 +170,9 @@ public class AgentManagerImpl implements AgentManager {
         agent.setGender(rs.getString("gender"));
         agent.setClearanceLevel(rs.getInt("clearance"));
         Date birth = rs.getDate("birth");
-        agent.setDateOfBirth(birth.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        agent.setDateOfBirth(birth.toLocalDate());
         Date death = rs.getDate("death");
-        agent.setDateOfBirth(death.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        if (death!=null)agent.setDateOfDeath(death.toLocalDate());
         return agent;
     }
 
@@ -213,8 +216,12 @@ public class AgentManagerImpl implements AgentManager {
             try (PreparedStatement st = conn.prepareStatement("SELECT id,name,gender,clearance,birth,death FROM agent WHERE id=?")) {
                 st.setLong(1, id);
                 ResultSet rs = st.executeQuery();
-                SecretAgent agent = resultSetToAgent(rs);
-                return agent;
+                if (rs.next()) {
+                    SecretAgent agent = resultSetToAgent(rs);
+                    return agent;
+                } else {
+                    return null;
+                }
             }
         } catch (SQLException ex) {
             log.error("db connection problem", ex);

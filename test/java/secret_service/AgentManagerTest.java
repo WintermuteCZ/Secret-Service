@@ -1,8 +1,13 @@
 package secret_service;
 
+import org.apache.commons.dbcp2.BasicDataSource;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Collection;
 
@@ -10,11 +15,33 @@ import static org.junit.Assert.*;
 public class AgentManagerTest {
 
     AgentManager agentManager;
+    private DataSource dataSource;
 
     @Before
-    public void setUp() throws Exception {
-        agentManager = new AgentManagerImpl();
+    public void setUp() throws SQLException {
+        BasicDataSource bds = new BasicDataSource();
+        bds.setUrl("jdbc:derby:memory:AgentManagerTest;create=true");
+        this.dataSource = bds;
+        //create new empty table before every test
+        try (Connection conn = bds.getConnection()) {
+            conn.prepareStatement("CREATE TABLE AGENT ("
+                    + "id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,"
+                    + "name VARCHAR(100),"
+                    + "gender VARCHAR(10),"
+                    + "clearance INT NOT NULL,"
+                    + "birth DATE,"
+                    + "death DATE)").executeUpdate();
+        }
+        agentManager = new AgentManagerImpl(bds);
     }
+
+    @After
+    public void tearDown() throws SQLException {
+        try (Connection con = dataSource.getConnection()) {
+            con.prepareStatement("DROP TABLE AGENT").executeUpdate();
+        }
+    }
+
 
     @Test
     public void retrievableAgentTest() {
@@ -68,7 +95,7 @@ public class AgentManagerTest {
             agentManager.deleteAgent(agent);
             fail();
         }
-        catch (IllegalArgumentException e) {
+        catch (ServiceFailureException e) {
             //OK
         }
 
@@ -100,7 +127,7 @@ public class AgentManagerTest {
 
         agent.setDateOfDeath(LocalDate.of(1993, 5, 6));
         agentManager.updateAgent(agent);
-        agent = agentManager.findAgentByID(id);
+        agent = agentManager.findAgentByID(agent.getId());
         assertEquals(LocalDate.of(1993,5,6),agent.getDateOfDeath());
 
 
