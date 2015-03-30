@@ -59,30 +59,7 @@ public class AgentManagerImpl implements AgentManager {
         }
         if (secretAgent.getDateOfDeath() != null) {
             if (secretAgent.getDateOfDeath().isBefore(secretAgent.getDateOfBirth())) {
-<<<<<<< HEAD
                 throw new ValidationException("date of death is before date of birth");
-=======
-                throw new IllegalArgumentException("date of death is before date of birth");
-            }
-        }
-
-        try (Connection conn = dataSource.getConnection()) {
-            try (PreparedStatement st = conn.prepareStatement("INSERT INTO agent (name,gender,clearance,birth,death) VALUES (?,?,?,?,?)",
-                    Statement.RETURN_GENERATED_KEYS)) {
-                st.setString(1, secretAgent.getName());
-                st.setString(2, secretAgent.getGender());
-                st.setInt(3, secretAgent.getClearanceLevel());
-                LocalDate birth = secretAgent.getDateOfBirth();
-                st.setObject(4, birth == null ? null : birth.toString(), Types.DATE);
-                LocalDate death = secretAgent.getDateOfDeath();
-                st.setObject(5, death == null ? null : death.toString(), Types.DATE);
-                int addedRows = st.executeUpdate();
-                if (addedRows != 1) {
-                    throw new ServiceFailureException("Internal Error: More rows inserted when trying to insert agent " + secretAgent);
-                }
-                ResultSet keyRS = st.getGeneratedKeys();
-                secretAgent.setId(getKey(keyRS, secretAgent));
->>>>>>> origin/master
             }
         }
     }
@@ -113,40 +90,9 @@ public class AgentManagerImpl implements AgentManager {
         if (secretAgent.getId() == null) {
             throw new IllegalArgumentException("agent id is null");
         }
-<<<<<<< HEAD
         if (findAgentByID(secretAgent.getId()) != null) {
             if (findAgentByID(secretAgent.getId()).getDateOfDeath() != null && secretAgent.getDateOfDeath() == null) {
                 throw new ServiceFailureException("we don't have zombie agents (yet)");
-=======
-        if (secretAgent.getGender() == null) {
-            throw new IllegalArgumentException("agent gender is null");
-        }
-        if (secretAgent.getClearanceLevel() < 0) {
-            throw new IllegalArgumentException("clearance level is negative number");
-        }
-        if (secretAgent.getDateOfBirth() == null) {
-            throw new IllegalArgumentException("date of birth is null");
-        }
-        if (secretAgent.getDateOfDeath() != null) {
-            if (secretAgent.getDateOfDeath().isBefore(secretAgent.getDateOfBirth())) {
-                throw new IllegalArgumentException("date of death is before date of birth");
-            }
-        }
-
-        try (Connection conn = dataSource.getConnection()) {
-            try(PreparedStatement st = conn.prepareStatement("UPDATE agent SET name=?,gender=?,clearance=?,birth=?,death=? WHERE id=?")) {
-                st.setString(1, secretAgent.getName());
-                st.setString(2, secretAgent.getGender());
-                st.setInt(3, secretAgent.getClearanceLevel());
-                LocalDate birth = secretAgent.getDateOfBirth();
-                st.setObject(4, birth == null ? null : birth.toString(), Types.DATE);
-                LocalDate death = secretAgent.getDateOfDeath();
-                st.setObject(5, death == null ? null : death.toString(), Types.DATE);
-                st.setLong(6,secretAgent.getId());
-                if(st.executeUpdate()!=1) {
-                    throw new IllegalArgumentException("cannot update agent " + secretAgent);
-                }
->>>>>>> origin/master
             }
         }
         int n = jdbc.update("UPDATE agent SET name = ?, gender = ?, birth = ?, death = ?, clearance = ? WHERE ID = ?",
@@ -174,22 +120,6 @@ public class AgentManagerImpl implements AgentManager {
         }
     }
 
-<<<<<<< HEAD
-=======
-    private SecretAgent resultSetToAgent(ResultSet rs) throws SQLException {
-        SecretAgent agent = new SecretAgent();
-        agent.setId(rs.getLong("id"));
-        agent.setName(rs.getString("name"));
-        agent.setGender(rs.getString("gender"));
-        agent.setClearanceLevel(rs.getInt("clearance"));
-        Date birth = rs.getDate("birth");
-        agent.setDateOfBirth(birth.toLocalDate());
-        Date death = rs.getDate("death");
-        if (death!=null)agent.setDateOfDeath(death.toLocalDate());
-        return agent;
-    }
-
->>>>>>> origin/master
     @Override
     public List<SecretAgent> findAllAgents() throws ServiceFailureException {
         log.debug("findAllAgents()");
@@ -203,28 +133,10 @@ public class AgentManagerImpl implements AgentManager {
     }
 
     @Override
-<<<<<<< HEAD
     public SecretAgent findAgentByID(Long id) throws ServiceFailureException, IllegalArgumentException {
         log.debug("findAgent({})", id);
         if (id == null) {
             throw new IllegalArgumentException("id is null");
-=======
-    public SecretAgent findAgentByID(Long id) {
-        try (Connection conn = dataSource.getConnection()) {
-            try (PreparedStatement st = conn.prepareStatement("SELECT id,name,gender,clearance,birth,death FROM agent WHERE id=?")) {
-                st.setLong(1, id);
-                ResultSet rs = st.executeQuery();
-                if (rs.next()) {
-                    SecretAgent agent = resultSetToAgent(rs);
-                    return agent;
-                } else {
-                    return null;
-                }
-            }
-        } catch (SQLException ex) {
-            log.error("db connection problem", ex);
-            throw new ServiceFailureException("Error when retrieving all agents", ex);
->>>>>>> origin/master
         }
         List<SecretAgent> list = jdbc.query("SELECT ID, name, gender, birth, death, clearance FROM agent WHERE id = ?", agentMapper, id);
         return list.isEmpty() ? null : list.get(0);
