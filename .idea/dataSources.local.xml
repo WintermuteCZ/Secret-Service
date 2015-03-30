@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal">
+    <data-source name="Derby - secretService;create=true;@localhost" uuid="d776d738-3f90-4471-b56a-37744ee468b0">
+      <secret-storage>master_key</secret-storage>
+      <user-name>user</user-name>
+      <schema-pattern>*.APP</schema-pattern>
+      <default-schemas>*.APP</default-schemas>
+    </data-source>
+  </component>
+</project>

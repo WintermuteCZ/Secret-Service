@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Mon Mar 30 12:09:57 CEST 2015:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.11.1.1 - (1616546): instance a816c00e-014c-6a28-bd70-0000009407b8 
+on database directory memory:C:\Users\Vitus-ad\IdeaProjects\Secret Service\missionmanager-test with class loader sun.misc.Launcher$AppClassLoader@106d69c 
+Loaded from file:/C:/Users/Vitus-ad/.m2/repository/org/apache/derby/derby/10.11.1.1/derby-10.11.1.1.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_20-b26
+user.dir=C:\Users\Vitus-ad\IdeaProjects\Secret Service
+os.name=Windows 8.1
+os.arch=x86
+os.version=6.3
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''

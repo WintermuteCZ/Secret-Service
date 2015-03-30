@@ -1,24 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="18c4f198-86de-4cf5-b44b-bb0896081c39" name="Default" comment="Spring Implementation, Agent + Mission&#10;&#10;sql scripts in">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/other/AgentManagerFirstSimpleImpl.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__aopalliance_aopalliance_1_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__commons_dbutils_commons_dbutils_1_6.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_aop_4_0_5_RELEASE.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_beans_4_0_5_RELEASE.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_context_4_0_5_RELEASE.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_core_4_0_5_RELEASE.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_expression_4_0_5_RELEASE.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_jdbc_4_0_5_RELEASE.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_tx_4_0_5_RELEASE.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/java/secret_service/SecretServiceImplTest.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/other/ValidationException.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/resources/createTables.sql" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/resources/dropTables.sql" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" />
-      <change type="MOVED" beforePath="C:\Users\Vitus-ad\IdeaProjects\Secret Service\src\main\java\secret_service\ServiceFailureException.java" afterPath="$PROJECT_DIR$/src/main/java/other/ServiceFailureException.java" />
+    <list default="true" id="18c4f198-86de-4cf5-b44b-bb0896081c39" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/secret_service/AgentManagerImpl.class" afterPath="$PROJECT_DIR$/target/classes/secret_service/AgentManagerImpl.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/secret_service/Mission.class" afterPath="$PROJECT_DIR$/target/classes/secret_service/Mission.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/secret_service/MissionManagerImpl.class" afterPath="$PROJECT_DIR$/target/classes/secret_service/MissionManagerImpl.class" />
@@ -26,16 +9,6 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/secret_service/SecretAgent.class" afterPath="$PROJECT_DIR$/target/classes/secret_service/SecretAgent.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/secret_service/SecretService.class" afterPath="$PROJECT_DIR$/target/classes/secret_service/SecretService.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/secret_service/SecretServiceImpl.class" afterPath="$PROJECT_DIR$/target/classes/secret_service/SecretServiceImpl.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/secret_service/AgentManagerImpl.java" afterPath="$PROJECT_DIR$/src/main/java/secret_service/AgentManagerImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/java/secret_service/AgentManagerTest.java" afterPath="$PROJECT_DIR$/test/java/secret_service/AgentManagerTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/secret_service/Mission.java" afterPath="$PROJECT_DIR$/src/main/java/secret_service/Mission.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/secret_service/MissionManagerImpl.java" afterPath="$PROJECT_DIR$/src/main/java/secret_service/MissionManagerImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/java/secret_service/MissionManagerImplTest.java" afterPath="$PROJECT_DIR$/test/java/secret_service/MissionManagerImplTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Secret Service.iml" afterPath="$PROJECT_DIR$/Secret Service.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/secret_service/SecretAgent.java" afterPath="$PROJECT_DIR$/src/main/java/secret_service/SecretAgent.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/secret_service/SecretService.java" afterPath="$PROJECT_DIR$/src/main/java/secret_service/SecretService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/secret_service/SecretServiceImpl.java" afterPath="$PROJECT_DIR$/src/main/java/secret_service/SecretServiceImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Secret Service.iws" />
@@ -823,7 +796,7 @@
       <workItem from="1425627376341" duration="6167000" />
       <workItem from="1427443375958" duration="41000" />
       <workItem from="1427564156171" duration="3362000" />
-      <workItem from="1427652767786" duration="29403000" />
+      <workItem from="1427652767786" duration="29491000" />
     </task>
     <task id="LOCAL-00001" summary="test">
       <created>1425651969460</created>
@@ -831,14 +804,20 @@
       <option name="project" value="LOCAL" />
       <updated>1425651969460</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Spring Implementation, Agent + Mission&#10;&#10;sql scripts in resources&#10;useful tools, depricated classes and DBUtils in package &quot;other&quot;">
+      <created>1427710482055</created>
+      <option name="number" value="00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1427710482055</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="48602000" />
+    <option name="totallyTimeSpent" value="48690000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -888,7 +867,8 @@
     </option>
     <option name="CHECK_COMMIT_MESSAGE_SPELLING" value="false" />
     <MESSAGE value="test" />
-    <option name="LAST_COMMIT_MESSAGE" value="test" />
+    <MESSAGE value="Spring Implementation, Agent + Mission&#10;&#10;sql scripts in resources&#10;useful tools, depricated classes and DBUtils in package &quot;other&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="Spring Implementation, Agent + Mission&#10;&#10;sql scripts in resources&#10;useful tools, depricated classes and DBUtils in package &quot;other&quot;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
