@@ -1,8 +1,15 @@
 package secret_service;
 
+import org.apache.commons.dbcp2.BasicDataSource;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import other.DBUtils;
+import other.ServiceFailureException;
+import other.ValidationException;
 
+import javax.sql.DataSource;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -12,11 +19,25 @@ import static org.junit.Assert.fail;
 
 public class MissionManagerImplTest {
 
-    MissionManager missionManager;
+    private MissionManagerImpl missionManager;
+    private DataSource ds;
+
+    private static DataSource prepareDataSource() throws SQLException {
+        BasicDataSource ds = new BasicDataSource();
+        ds.setUrl("jdbc:derby:memory:missionmanager-test;create=true");
+        return ds;
+    }
 
     @Before
-    public void setUp() throws Exception {
-        missionManager = new MissionManagerImpl();
+    public void setUp() throws SQLException {
+        ds = prepareDataSource();
+        DBUtils.executeSqlScript(ds, MissionManager.class.getResourceAsStream("/createTables.sql"));
+        missionManager = new MissionManagerImpl(ds);
+    }
+
+    @After
+    public void tearDown() throws SQLException {
+        DBUtils.executeSqlScript(ds, MissionManager.class.getResourceAsStream("/dropTables.sql"));
     }
 
     @Test
@@ -73,10 +94,10 @@ public class MissionManagerImplTest {
         assertThat("Poisoning", equalTo(mission.getTitle()));
         assertThat("Hungary", equalTo(mission.getCountry()));
         assertThat(9001, equalTo(mission.getRequiredClearance()));
-        assertThat(LocalDate.of(2000,1,1), equalTo(mission.getDateOfCompletion()));
+        assertThat(LocalDate.of(2000, 1, 1), equalTo(mission.getDateOfCompletion()));
         assertThat("Kill the wizard as violently as possible", equalTo(mission.getDescription()));
 
-        mission.setTitle("Just don't make a lot of mess");
+        mission.setDescription("Just don't make a lot of mess");
         missionManager.updateMission(mission);
         mission = missionManager.findMissionByID(id);
         assertThat("Poisoning", equalTo(mission.getTitle()));
@@ -85,14 +106,6 @@ public class MissionManagerImplTest {
         assertThat(LocalDate.of(2000,1,1), equalTo(mission.getDateOfCompletion()));
         assertThat("Just don't make a lot of mess", equalTo(mission.getDescription()));
 
-        mission.setTitle(null);
-        missionManager.updateMission(mission);
-        mission = missionManager.findMissionByID(id);
-        assertThat("Poisoning", equalTo(mission.getTitle()));
-        assertThat("Hungary", equalTo(mission.getCountry()));
-        assertThat(9001, equalTo(mission.getRequiredClearance()));
-        assertThat(LocalDate.of(2000,1,1), equalTo(mission.getDateOfCompletion()));
-        assertThat(mission.getDescription(), nullValue());
     }
 
     @Test
@@ -120,10 +133,10 @@ public class MissionManagerImplTest {
 
         try {
             mission = missionManager.findMissionByID(id);
-            mission.setId(id - 1);
+            mission.setId(id + 1);
             missionManager.updateMission(mission);
             fail();
-        } catch (IllegalArgumentException ex) {
+        } catch (ServiceFailureException ex) {
             //Correct
         }
 
@@ -132,7 +145,7 @@ public class MissionManagerImplTest {
             mission.setTitle(null);
             missionManager.updateMission(mission);
             fail();
-        } catch (IllegalArgumentException ex) {
+        } catch (ValidationException ex) {
             //Correct
         }
 
@@ -141,7 +154,7 @@ public class MissionManagerImplTest {
             mission.setCountry(null);
             missionManager.updateMission(mission);
             fail();
-        } catch (IllegalArgumentException ex) {
+        } catch (ValidationException ex) {
             //Correct
         }
 
@@ -150,7 +163,7 @@ public class MissionManagerImplTest {
             mission.setRequiredClearance(-1);
             missionManager.updateMission(mission);
             fail();
-        } catch (IllegalArgumentException ex) {
+        } catch (ValidationException ex) {
             //Correct
         }
 
@@ -159,7 +172,7 @@ public class MissionManagerImplTest {
             mission.setDateOfCompletion(null); //completed mission can't be undone
             missionManager.updateMission(mission);
             fail();
-        } catch (IllegalArgumentException ex) {
+        } catch (ServiceFailureException ex) {
             //Correct
         }
     }
@@ -201,15 +214,15 @@ public class MissionManagerImplTest {
             mission.setId(-1L);
             missionManager.deleteMission(mission);
             fail();
-        } catch (IllegalArgumentException ex) {
+        } catch (ServiceFailureException ex) {
             //Correct
         }
 
         try {
-            mission.setId(1L);
+            mission.setId(321L);
             missionManager.deleteMission(mission);
             fail();
-        } catch (IllegalArgumentException ex) {
+        } catch (ServiceFailureException ex) {
             //Correct
         }
     }

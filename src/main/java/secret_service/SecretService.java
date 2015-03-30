@@ -1,5 +1,7 @@
 package secret_service;
 
+import java.util.List;
+
 /**
  * Created by Vitus-ad on 26. 2. 2015.
  */
@@ -8,7 +10,7 @@ public interface SecretService {
 
     void removeAgentFromMission(SecretAgent secretAgent, Mission mission);
 
-    Mission findMissionWithAgent(SecretAgent secretAgent);
+    List<Mission> findMissionsWithAgent(SecretAgent secretAgent);
 
     SecretAgent findAgentOnMission(Mission mission);
 

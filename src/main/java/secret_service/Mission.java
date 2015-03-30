@@ -90,4 +90,16 @@ public class Mission {
     public int hashCode() {
         return id.hashCode();
     }
+
+    @Override
+    public String toString() {
+        return "Mission{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", country='" + country + '\'' +
+                ", description='" + description + '\'' +
+                ", dateOfCompletion=" + dateOfCompletion +
+                ", requiredClearance=" + requiredClearance +
+                '}';
+    }
 }

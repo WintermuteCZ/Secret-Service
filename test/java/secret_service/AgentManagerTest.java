@@ -1,19 +1,39 @@
 package secret_service;
 
+import org.apache.commons.dbcp2.BasicDataSource;
+import other.DBUtils;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import other.ServiceFailureException;
 
+import javax.sql.DataSource;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Collection;
 
 import static org.junit.Assert.*;
 public class AgentManagerTest {
 
-    AgentManager agentManager;
+    private AgentManagerImpl agentManager;
+    private DataSource ds;
+
+    private static DataSource prepareDataSource() throws SQLException {
+        BasicDataSource ds = new BasicDataSource();
+        ds.setUrl("jdbc:derby:memory:agentmanager-test;create=true");
+        return ds;
+    }
 
     @Before
-    public void setUp() throws Exception {
-        agentManager = new AgentManagerImpl();
+    public void setUp() throws SQLException {
+        ds = prepareDataSource();
+        DBUtils.executeSqlScript(ds, AgentManager.class.getResourceAsStream("/createTables.sql"));
+        agentManager = new AgentManagerImpl(ds);
+    }
+
+    @After
+    public void tearDown() throws SQLException {
+        DBUtils.executeSqlScript(ds, AgentManager.class.getResourceAsStream("/dropTables.sql"));
     }
 
     @Test
@@ -68,7 +88,7 @@ public class AgentManagerTest {
             agentManager.deleteAgent(agent);
             fail();
         }
-        catch (IllegalArgumentException e) {
+        catch (ServiceFailureException e) {
             //OK
         }
 
@@ -84,7 +104,6 @@ public class AgentManagerTest {
         agentManager.updateAgent(agent);
         agent = agentManager.findAgentByID(id);
         assertEquals(2, agent.getClearanceLevel());
-
 
         agent.setGender("female");
         agentManager.updateAgent(agent);

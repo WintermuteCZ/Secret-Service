@@ -1,4 +1,4 @@
-package secret_service;
+package other;
 
 /**
  * Created by Martina on 26.3.2015.

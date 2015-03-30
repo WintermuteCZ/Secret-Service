@@ -1,0 +1,18 @@
+CREATE TABLE agent (
+  ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  name VARCHAR(50),
+  gender VARCHAR(20),
+  clearance INT,
+  birth DATE,
+  death DATE
+);
+
+CREATE TABLE mission (
+  ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  title VARCHAR(50),
+  country VARCHAR(50),
+  description VARCHAR(500),
+  completion DATE,
+  reqClearance INT,
+  agent INTEGER REFERENCES agent(ID)
+);
