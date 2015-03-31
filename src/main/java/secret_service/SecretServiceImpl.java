@@ -31,6 +31,7 @@ public class SecretServiceImpl implements SecretService {
 
     @Override
     public void assignAgentToMission(SecretAgent secretAgent, Mission mission) throws ServiceFailureException, IllegalArgumentException {
+        log.debug("assignAgentToMission({},{})", secretAgent, mission);
         if (secretAgent == null) {
             throw new IllegalArgumentException("agent is null");
         }
@@ -45,12 +46,23 @@ public class SecretServiceImpl implements SecretService {
         }
 
         transaction.execute(transactionStatus -> {
+            //first check if agent not already active
+            int activeMissionsCount = jdbc.queryForObject(
+                    "SELECT count(*) FROM Mission WHERE agent = ? AND completion IS NULL ", Integer.class, secretAgent.getId());
+
+            if (activeMissionsCount != 0) throw new ServiceFailureException("Agent " + secretAgent + " already on active mission.");
+
+            //updating mission
+            int n = jdbc.update("UPDATE Mission SET agent = ? WHERE id = ? AND reqClearance <= ? AND agent IS NULL", secretAgent.getId(), mission.getId(),secretAgent.getClearanceLevel());
+            if (n == 0)
+                throw new ServiceFailureException("Mission " + mission + " not found or some agent already on mission or low clearance of agent.");
             return null;
         });
     }
 
     @Override
     public void removeAgentFromMission(SecretAgent secretAgent, Mission mission) throws ServiceFailureException, IllegalArgumentException {
+        log.debug("removeAgentFromMission({},{})", secretAgent, mission);
         if (secretAgent == null) {
             throw new IllegalArgumentException("agent is null");
         }
@@ -69,14 +81,15 @@ public class SecretServiceImpl implements SecretService {
         }
     }
 
+
     @Override
     public List<Mission> findMissionsWithAgent(SecretAgent secretAgent) throws ServiceFailureException, IllegalArgumentException {
         log.debug("findMissionsWithAgent({})", secretAgent);
         if (secretAgent == null) throw new IllegalArgumentException("agent is null");
         if (secretAgent.getId() == null) throw new ServiceFailureException("agent id is null");
         List<Mission> missions = jdbc.query(
-                "SELECT ID, title, country, description, completion, reqClearance FROM mission JOIN agent ON agent.ID = mission.agent " +
-                        "WHERE Mission.id = ?", missionMapper, secretAgent.getId());
+                "SELECT mission.ID, title, country, description, completion, reqClearance FROM mission JOIN agent ON agent.ID = mission.agent " +
+                        "WHERE agent.id = ?", missionMapper, secretAgent.getId());
         return missions;
     }
 
@@ -90,8 +103,8 @@ public class SecretServiceImpl implements SecretService {
             throw new ServiceFailureException("mission id is null");
         }
         List<SecretAgent> agents = jdbc.query(
-                "SELECT ID, name, gender, clearance, birth, death FROM agent JOIN mission ON agent.ID = mission.agent " +
-                        "WHERE Agent.id = ?", agentMapper, mission.getId());
+                "SELECT agent.ID, name, gender, clearance, birth, death FROM agent JOIN mission ON agent.ID = mission.agent " +
+                        "WHERE mission.id = ?", agentMapper, mission.getId());
         return agents.isEmpty() ? null : agents.get(0);
     }
 }

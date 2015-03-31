@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
 import other.ServiceFailureException;
 import other.ValidationException;
 
@@ -23,9 +25,12 @@ public class AgentManagerImpl implements AgentManager {
     final static Logger log = LoggerFactory.getLogger(AgentManagerImpl.class);
 
     private final JdbcTemplate jdbc;
+    private final TransactionTemplate transaction;
 
     public AgentManagerImpl(DataSource dataSource) {
+
         this.jdbc = new JdbcTemplate(dataSource);
+        this.transaction = new TransactionTemplate(new DataSourceTransactionManager(dataSource));
     }
 
     //result set -> instance
@@ -107,6 +112,7 @@ public class AgentManagerImpl implements AgentManager {
 
     @Override
     public void deleteAgent(SecretAgent secretAgent) throws ServiceFailureException, IllegalArgumentException {
+
         log.debug("deleteAgent({})", secretAgent);
         if (secretAgent == null) {
             throw new IllegalArgumentException("agent is null");
@@ -114,10 +120,15 @@ public class AgentManagerImpl implements AgentManager {
         if (secretAgent.getId() == null) {
             throw new IllegalArgumentException("agent id is null");
         }
-        int n = jdbc.update("DELETE FROM agent WHERE ID = ?", secretAgent.getId());
-        if(n!=1) {
-            throw new ServiceFailureException("agent " + secretAgent + " not deleted");
-        }
+        transaction.execute(transactionStatus -> {
+            jdbc.update("UPDATE mission SET agent = NULL WHERE agent = ?", secretAgent.getId());
+
+            int n = jdbc.update("DELETE FROM agent WHERE ID = ?", secretAgent.getId());
+            if (n != 1) {
+                throw new ServiceFailureException("agent " + secretAgent + " not deleted");
+            }
+            return null;
+        });
     }
 
     @Override

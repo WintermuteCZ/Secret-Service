@@ -267,7 +267,7 @@ public class MissionManagerImplTest {
         assertThat(list, not(hasItem(otherMission)));
     }
 
-    private static Mission newMission(String title, String country, int requiredClearance, LocalDate dateOfCompletion, String description) {
+    static Mission newMission(String title, String country, int requiredClearance, LocalDate dateOfCompletion, String description) {
         Mission mission = new Mission();
         mission.setTitle(title);
         mission.setCountry(country);

@@ -51,6 +51,23 @@ public class AgentManagerTest {
     }
 
     @Test
+    public void findAllAgentTest() {
+        SecretAgent agent = newSecretAgent(null,"Bond", "male", LocalDate.of(1953,5,6), 10);
+        SecretAgent agent2 = newSecretAgent(null,"John", "male", LocalDate.of(1963,5,6), 1);
+        SecretAgent agent3 = newSecretAgent(null,"John2", "male", LocalDate.of(1967,5,6), 1);
+
+        agentManager.createAgent(agent);
+        agentManager.createAgent(agent2);
+        agentManager.createAgent(agent3);
+
+        Collection<SecretAgent> agentList = agentManager.findAllAgents();
+        assertTrue(agentList.contains(agent));
+        assertTrue(agentList.contains(agent2));
+        assertTrue(agentList.contains(agent3));
+
+    }
+
+    @Test
     public void findAliveAgentTest() {
         SecretAgent agent = newSecretAgent(null,"Bond", "male", LocalDate.of(1953,5,6), 10);
         agent.setDateOfDeath(LocalDate.of(2012, 5, 3));
@@ -75,6 +92,7 @@ public class AgentManagerTest {
     @Test
     public void deleteAgentWrongAttributesTest() {
         SecretAgent agent = newSecretAgent(null,"John", "male", LocalDate.of(1963,5,6), 1);
+
         agentManager.createAgent(agent);
 
         try {
@@ -87,6 +105,24 @@ public class AgentManagerTest {
 
         try {
             agent.setId(321L);
+            agentManager.deleteAgent(agent);
+            fail();
+        }
+        catch (ServiceFailureException e) {
+            //OK
+        }
+
+        try {
+            agent.setId(null);
+            agentManager.deleteAgent(agent);
+            fail();
+        }
+        catch (IllegalArgumentException e) {
+            //OK
+        }
+
+        try {
+            agent.setId(-1L);
             agentManager.deleteAgent(agent);
             fail();
         }
@@ -128,7 +164,7 @@ public class AgentManagerTest {
     }
 
 
-    private static SecretAgent newSecretAgent(Long id, String name, String gender, LocalDate dateOfBirth, int clearanceLevel) {
+    static SecretAgent newSecretAgent(Long id, String name, String gender, LocalDate dateOfBirth, int clearanceLevel) {
         SecretAgent agent = new SecretAgent();
         agent.setId(id);
         agent.setName(name);
