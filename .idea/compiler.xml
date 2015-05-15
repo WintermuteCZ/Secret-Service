@@ -26,5 +26,8 @@
         <module name="Secret Service" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="Secret Service" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>
