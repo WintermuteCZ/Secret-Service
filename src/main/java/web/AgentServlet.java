@@ -55,13 +55,13 @@ public class AgentServlet extends HttpServlet {
                 LocalDate deathDate;
                 int clearanceLevel;
                 try {
-                    String[] tok = birth.split(":");
-                    birthDate = LocalDate.of(Integer.parseInt(tok[0]), Integer.parseInt(tok[1]), Integer.parseInt(tok[2]));
+                    String[] tok = birth.split("-");
+                    birthDate = LocalDate.of(Integer.parseInt(tok[2]), Integer.parseInt(tok[1]), Integer.parseInt(tok[0]));
                     if (death == null || death.length() == 0)
                         deathDate = null;
                     else {
-                        tok = birth.split(":");
-                        deathDate = LocalDate.of(Integer.parseInt(tok[0]),Integer.parseInt(tok[1]),Integer.parseInt(tok[2]));
+                        tok = death.split("-");
+                        deathDate = LocalDate.of(Integer.parseInt(tok[2]), Integer.parseInt(tok[1]), Integer.parseInt(tok[0]));
                     }
                 }
                 catch(Exception e) {

@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <body>
-
+<div align="center">
 <table border="1">
     <thead>
     <tr>
@@ -43,11 +43,11 @@
             <td><input type="text" name="gender" value="<c:out value='${param.gender}'/>"/></td>
         </tr>
         <tr>
-            <th>birth(yyyy:mm:dd):</th>
+            <th>birth(dd-mm-yyyy):</th>
             <td><input type="text" name="birth" value="<c:out value='${param.birth}'/>"/></td>
         </tr>
         <tr>
-            <th>death(yyyy:mm:dd):</th>
+            <th>death(dd-mm-yyyy):</th>
             <td><input type="text" name="death" value="<c:out value='${param.death}'/>"/></td>
         </tr>
         <tr>
@@ -58,6 +58,6 @@
     </table>
     <input type="Submit" value="Zadat" />
 </form>
-
+</div>
 </body>
 </html>

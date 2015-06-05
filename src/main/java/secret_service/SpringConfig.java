@@ -32,7 +32,7 @@ public class SpringConfig {
         return new EmbeddedDatabaseBuilder()
                 .setType(DERBY)
                 .addScript("classpath:createTables.sql")
-                //.addScript("classpath:test-data.sql")
+                .addScript("classpath:testData.sql")
                 .build();
     }
 
