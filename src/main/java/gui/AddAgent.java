@@ -3,7 +3,7 @@ package gui;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import secret_service.*;
+import cz.muni.fi.pv168.secret_service.*;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -45,9 +45,39 @@ public class AddAgent {
         ds.setUrl("jdbc:derby:memory:agencydb-test;create=true");
         this.model = model;
         manager = new AgentManagerImpl(ds);
+
         addAgentButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                int birthDay = Integer.parseInt(agentBirthDayCombo.getSelectedItem().toString());
+                int birthMonth = Integer.parseInt(agentBirthMonthCombo.getSelectedItem().toString());
+                int birthYear = Integer.parseInt(agentBirthYearCombo.getSelectedItem().toString());
+                int deathDay = Integer.parseInt(agentDeathDayCombo.getSelectedItem().toString());
+                int deathMonth = Integer.parseInt(agentDeathMonthCombo.getSelectedItem().toString());
+                int deathYear = Integer.parseInt(agentDeathYearCombo.getSelectedItem().toString());
+                boolean isDead = agentDeathCheckBox.isSelected();
+
+                LocalDate birth = null;
+                LocalDate death = null;
+                try {
+                    birth = LocalDate.of(birthYear, birthMonth, birthDay);
+                    death = isDead ? LocalDate.of(deathYear, deathMonth, deathDay) : null;
+                    if (death != null && birth.isAfter(death))
+                    {
+                        JFrame frame = new JFrame();
+                        JOptionPane.showMessageDialog(frame,bundle.getString("DeathAfterBirth"), bundle.getString("Error"), JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                } catch (DateTimeException e1) {
+                    e1.printStackTrace();
+                }
+
+                if (agentNameTextField.getText().equals("") || agentGenderTextField.getText().equals("")) {
+                    JFrame frame3 = new JFrame();
+                    JOptionPane.showMessageDialog(frame3,bundle.getString("ErrorAgentNotFilled"), bundle.getString("Error"), JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
                 JFrame frame2 = new JFrame();
                 Object[] options = {bundle.getString("Yes"),
                         bundle.getString("No")};
@@ -59,36 +89,15 @@ public class AddAgent {
                         null,
                         options,
                         options[1]);
-                if (n == JOptionPane.NO_OPTION) {
+                if (n != JOptionPane.YES_OPTION) {
                     return;
                 }
-                int birthDay = Integer.parseInt(agentBirthDayCombo.getSelectedItem().toString());
-                int birthMonth = Integer.parseInt(agentBirthMonthCombo.getSelectedItem().toString());
-                int birthYear = Integer.parseInt(agentBirthYearCombo.getSelectedItem().toString());
-                int deathDay = Integer.parseInt(agentDeathDayCombo.getSelectedItem().toString());
-                int deathMonth = Integer.parseInt(agentDeathMonthCombo.getSelectedItem().toString());
-                int deathYear = Integer.parseInt(agentDeathYearCombo.getSelectedItem().toString());
-                boolean isDead = agentDeathCheckBox.isSelected();
 
-
-                try {
-                    LocalDate birth = LocalDate.of(birthYear, birthMonth, birthDay);
-                    LocalDate death = isDead ? LocalDate.of(deathYear, deathMonth, deathDay) : null;
-                    if (death != null && birth.isAfter(death))
-                    {
-                        JFrame frame = new JFrame();
-                        JOptionPane.showMessageDialog(frame,bundle.getString("DeathAfterBirth"));
-                        return;
-                    }
-
-                    agent.setDateOfBirth(birth);
-                    agent.setDateOfDeath(death);
-                } catch (DateTimeException e1) {
-                    e1.printStackTrace();
-                }
                 agent.setName(agentNameTextField.getText());
                 agent.setGender(agentGenderTextField.getText());
                 agent.setClearanceLevel(Integer.parseInt(agentLevelCombo.getSelectedItem().toString()));
+                agent.setDateOfBirth(birth);
+                agent.setDateOfDeath(death);
 
                 AddAgentSwingWorker addAgentSwingWorker = new AddAgentSwingWorker(agent);
                 addAgentSwingWorker.execute();

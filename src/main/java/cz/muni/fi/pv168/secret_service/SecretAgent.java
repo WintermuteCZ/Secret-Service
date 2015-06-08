@@ -1,4 +1,4 @@
-package secret_service;
+package cz.muni.fi.pv168.secret_service;
 
 import java.time.LocalDate;
 

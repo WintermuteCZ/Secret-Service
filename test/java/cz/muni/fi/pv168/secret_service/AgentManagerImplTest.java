@@ -1,7 +1,9 @@
-package secret_service;
+package cz.muni.fi.pv168.secret_service;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import other.DBUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -14,10 +16,12 @@ import java.time.LocalDate;
 import java.util.Collection;
 
 import static org.junit.Assert.*;
-public class AgentManagerTest {
+public class AgentManagerImplTest {
 
     private AgentManagerImpl agentManager;
     private DataSource ds;
+
+    final static Logger log = LoggerFactory.getLogger(AgentManagerImplTest.class);
 
     private static DataSource prepareDataSource() throws SQLException {
         BasicDataSource ds = new BasicDataSource();
@@ -27,6 +31,7 @@ public class AgentManagerTest {
 
     @Before
     public void setUp() throws SQLException {
+        log.debug("agent manager test setting up database");
         ds = prepareDataSource();
         DBUtils.executeSqlScript(ds, AgentManager.class.getResourceAsStream("/createTables.sql"));
         agentManager = new AgentManagerImpl(ds);
@@ -34,12 +39,14 @@ public class AgentManagerTest {
 
     @After
     public void tearDown() throws SQLException {
+        log.debug("agent manager test dropping database");
         DBUtils.executeSqlScript(ds, AgentManager.class.getResourceAsStream("/dropTables.sql"));
     }
 
 
     @Test
     public void retrievableAgentTest() {
+        log.info("testing retrieveable agent");
         SecretAgent agent = newSecretAgent(null,"Bond", "male", LocalDate.of(1953,5,6), 10);
         agentManager.createAgent(agent);
 
@@ -52,6 +59,7 @@ public class AgentManagerTest {
 
     @Test
     public void findAllAgentTest() {
+        log.info("testing finding all agents");
         SecretAgent agent = newSecretAgent(null,"Bond", "male", LocalDate.of(1953,5,6), 10);
         SecretAgent agent2 = newSecretAgent(null,"John", "male", LocalDate.of(1963,5,6), 1);
         SecretAgent agent3 = newSecretAgent(null,"John2", "male", LocalDate.of(1967,5,6), 1);
@@ -69,6 +77,7 @@ public class AgentManagerTest {
 
     @Test
     public void findAliveAgentTest() {
+        log.info("testing finding alive agent");
         SecretAgent agent = newSecretAgent(null,"Bond", "male", LocalDate.of(1953,5,6), 10);
         agent.setDateOfDeath(LocalDate.of(2012, 5, 3));
         agentManager.createAgent(agent);
@@ -83,6 +92,7 @@ public class AgentManagerTest {
 
     @Test
     public void deleteAgentTest() {
+        log.info("testing deleting agent");
         SecretAgent agent = newSecretAgent(null,"Bond", "male", LocalDate.of(1953,5,6), 10);
         agentManager.createAgent(agent);
         agentManager.deleteAgent(agent);
@@ -91,6 +101,7 @@ public class AgentManagerTest {
 
     @Test
     public void deleteAgentWrongAttributesTest() {
+        log.info("testing deleting agent with wrong attributes");
         SecretAgent agent = newSecretAgent(null,"John", "male", LocalDate.of(1963,5,6), 1);
 
         agentManager.createAgent(agent);
@@ -134,6 +145,7 @@ public class AgentManagerTest {
 
     @Test
     public void updateAgentTest() {
+        log.info("testing updating agent");
         SecretAgent agent = newSecretAgent(null,"John", "male", LocalDate.of(1963,5,6), 1);
         agentManager.createAgent(agent);
         Long id = agent.getId();

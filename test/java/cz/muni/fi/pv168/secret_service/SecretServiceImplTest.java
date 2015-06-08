@@ -1,9 +1,11 @@
-package secret_service;
+package cz.muni.fi.pv168.secret_service;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import other.DBUtils;
 import other.ServiceFailureException;
 
@@ -13,8 +15,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.Assert.*;
-import static secret_service.AgentManagerTest.newSecretAgent;
-import static secret_service.MissionManagerImplTest.newMission;
+import static cz.muni.fi.pv168.secret_service.AgentManagerImplTest.newSecretAgent;
+import static cz.muni.fi.pv168.secret_service.MissionManagerImplTest.newMission;
 
 public class SecretServiceImplTest {
 
@@ -23,10 +25,13 @@ public class SecretServiceImplTest {
     private AgentManagerImpl agentManager;
     private DataSource ds;
 
+    final static Logger log = LoggerFactory.getLogger(SecretServiceImplTest.class);
+
     private Mission m1, m2, m3, missionWithNullId, missionNotInDB, missionIncomplete;
     private SecretAgent a1, a2, agentWithLowClearance, agentWithNullId, agentNotInDB;
 
     private void prepareTestData() {
+        log.info("preparing test data");
 
         m1 = newMission("The cake is a lie", "Slovenia", 5, LocalDate.of(2008,1,1), "Investigate if the cake is a lie.");
         m2 = newMission("Coffee", "England", 1, LocalDate.of(2008, 1, 2), "Where is my coffee?");
@@ -62,6 +67,7 @@ public class SecretServiceImplTest {
 
     @Before
     public void setUp() throws SQLException {
+        log.info("secret service test setting up database");
         ds = prepareDataSource();
         DBUtils.executeSqlScript(ds, SecretService.class.getResourceAsStream("/createTables.sql"));
         secretService = new SecretServiceImpl(ds);
@@ -72,6 +78,7 @@ public class SecretServiceImplTest {
 
     @After
     public void tearDown() throws SQLException {
+        log.info("secret service test dropping up database");
         DBUtils.executeSqlScript(ds, SecretService.class.getResourceAsStream("/dropTables.sql"));
     }
 
@@ -87,6 +94,7 @@ public class SecretServiceImplTest {
 
     @Test
     public void testAssignAgentToMission() throws Exception {
+        log.info("testing assigning agent to mission");
 
         secretService.assignAgentToMission(a2,m2);
         SecretAgent retrievedAgent = secretService.findAgentOnMission(m2);
@@ -128,6 +136,8 @@ public class SecretServiceImplTest {
 
     @Test
     public void testRemoveAgentFromMission() throws Exception {
+        log.info("testing removing agent from mission");
+
         secretService.assignAgentToMission(a1, m1);
         secretService.removeAgentFromMission(a1,m1);
 
@@ -176,6 +186,8 @@ public class SecretServiceImplTest {
 
     @Test
     public void testFindMissionsWithAgent() throws Exception {
+        log.info("testing finding mission of agent");
+
         assertTrue(secretService.findMissionsWithAgent(a1).isEmpty());
 
         secretService.assignAgentToMission(a1,m2);
@@ -206,6 +218,8 @@ public class SecretServiceImplTest {
 
     @Test
     public void testFindAgentOnMission() throws Exception {
+        log.info("testing finding agent of mission");
+
         assertNull(secretService.findAgentOnMission(m1));
 
         secretService.assignAgentToMission(a1,m1);

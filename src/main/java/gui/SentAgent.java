@@ -3,7 +3,7 @@ package gui;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import secret_service.*;
+import cz.muni.fi.pv168.secret_service.*;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -31,7 +31,6 @@ public class SentAgent {
 
     public SentAgent(SecretAgent agent, JFrame iFrame) {
         table1.setModel(new MissionTableModel());
-        //table1.setDefaultRenderer(Color.class, new ColorCellRenderer());
         this.missionModel = (MissionTableModel) table1.getModel();
         BasicDataSource ds = new BasicDataSource();
         ds.setUrl("jdbc:derby:memory:agencydb-test;create=true");

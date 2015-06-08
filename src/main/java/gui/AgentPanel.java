@@ -1,17 +1,19 @@
 package gui;
 
+import cz.muni.fi.pv168.secret_service.SecretService;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import secret_service.AgentManager;
-import secret_service.AgentManagerImpl;
-import secret_service.SecretAgent;
+import cz.muni.fi.pv168.secret_service.AgentManager;
+import cz.muni.fi.pv168.secret_service.AgentManagerImpl;
+import cz.muni.fi.pv168.secret_service.SecretAgent;
+import other.DBUtils;
+import other.ServiceFailureException;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.time.LocalDate;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
@@ -26,7 +28,6 @@ public class AgentPanel {
     private JRadioButton allAgentsRadioButton;
     private JRadioButton aliveAgentsRadioButton;
     private JRadioButton deadAgentsRadioButton;
-    private JButton agentShowButton;
     private JButton agentAddButton;
     private JButton agentUpdateButton;
     private JButton agentSentButton;
@@ -44,14 +45,17 @@ public class AgentPanel {
 
     public AgentPanel() {
         table1.setModel(new AgentTableModel());
-        //table1.setDefaultRenderer(Color.class, new ColorCellRenderer());
         this.agentModel = (AgentTableModel) table1.getModel();
         BasicDataSource ds = new BasicDataSource();
         ds.setUrl("jdbc:derby:memory:agencydb-test;create=true");
         agentManager = new AgentManagerImpl(ds);
-        agentManager.createAgent(new SecretAgent(null, "James Bond", "male", LocalDate.of(1998,5,12), null, 5));
-        agentManager.createAgent(new SecretAgent(null, "James Bond", "male", LocalDate.of(1998,5,12), null, 5));
-        agentManager.createAgent(new SecretAgent(null, "James Bond", "male", LocalDate.of(1998,5,12), null, 5));
+        //adding data for testing
+        try {
+            DBUtils.executeSqlScript(ds, SecretService.class.getResourceAsStream("/test-data.sql"));
+        } catch (Exception e) {
+            log.error("creating test data failed");
+            throw new ServiceFailureException(e);
+        }
         ListAllAgentsSwingWorker listAllAgentsSwingWorker = new ListAllAgentsSwingWorker();
         listAllAgentsSwingWorker.execute();
 
@@ -69,7 +73,7 @@ public class AgentPanel {
                 SecretAgent agent = agentManager.findAgentByID((Long) table1.getValueAt(row, 0));
 
                 JFrame iFrame = new JFrame();
-                iFrame.setTitle("Remove agent from mission");
+                iFrame.setTitle(bundle.getString("DeleteAgentFromMission"));
                 iFrame.add(new RemoveAgentFromMission(agent, iFrame).getPanel1());
                 iFrame.setContentPane(new RemoveAgentFromMission(agent, iFrame).getPanel1());
                 iFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
@@ -80,23 +84,30 @@ public class AgentPanel {
             }
         });
 
-        agentShowButton.addActionListener(new ActionListener() {
+        allAgentsRadioButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                log.debug("showAgentsButton({})");
-                if (allAgentsRadioButton.isSelected()) {
-                    ListAllAgentsSwingWorker listAllAgentsSwingWorker = new ListAllAgentsSwingWorker();
-                    listAllAgentsSwingWorker.execute();
-                }
-                if (aliveAgentsRadioButton.isSelected()) {
-                    ListAliveAgentsSwingWorker listAliveAgentsSwingWorker = new ListAliveAgentsSwingWorker();
-                    listAliveAgentsSwingWorker.execute();
-                }
-                if (deadAgentsRadioButton.isSelected()) {
-                    ListDeadAgentsSwingWorker listDeadAgentsSwingWorker = new ListDeadAgentsSwingWorker();
-                    listDeadAgentsSwingWorker.execute();
+                log.debug("showAllRadio({})");
+                ListAllAgentsSwingWorker listAllAgentsSwingWorker = new ListAllAgentsSwingWorker();
+                listAllAgentsSwingWorker.execute();
+            }
+        });
 
-                }
+        aliveAgentsRadioButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                log.debug("showAliveRadio({})");
+                ListAliveAgentsSwingWorker listAliveAgentsSwingWorker = new ListAliveAgentsSwingWorker();
+                listAliveAgentsSwingWorker.execute();
+            }
+        });
+
+        deadAgentsRadioButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                log.debug("showDeadRadio({})");
+                ListDeadAgentsSwingWorker listDeadAgentsSwingWorker = new ListDeadAgentsSwingWorker();
+                listDeadAgentsSwingWorker.execute();
             }
         });
 
@@ -114,7 +125,7 @@ public class AgentPanel {
                 SecretAgent agent = agentManager.findAgentByID((Long) table1.getValueAt(row, 0));
 
                 JFrame iFrame = new JFrame();
-                iFrame.setTitle("Sent agent");
+                iFrame.setTitle(bundle.getString("SentAgent"));
                 iFrame.add(new SentAgent(agent, iFrame).getPanel1());
                 iFrame.setContentPane(new SentAgent(agent, iFrame).getPanel1());
                 iFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
@@ -135,8 +146,25 @@ public class AgentPanel {
                     JOptionPane.showMessageDialog(frame, bundle.getString("ErrorMustSelect"));
                     return;
                 }
+
                 int row = table1.getSelectedRow();
                 SecretAgent agent = agentManager.findAgentByID((Long) table1.getValueAt(row, 0));
+
+                JFrame frame2 = new JFrame();
+                Object[] options = {bundle.getString("Yes"),
+                        bundle.getString("No")};
+                int n = JOptionPane.showOptionDialog(frame2,
+                        bundle.getString("DeleteAgentQuestion") + " " + agent.getName(),
+                        bundle.getString("DeleteAgent"),
+                        JOptionPane.YES_OPTION,
+                        JOptionPane.NO_OPTION,
+                        null,
+                        options,
+                        options[1]);
+                if (n != JOptionPane.YES_OPTION) {
+                    return;
+                }
+
                 DeleteAgentSwingWorker deleteAgentSwingWorker = new DeleteAgentSwingWorker(agent);
                 deleteAgentSwingWorker.execute();
             }
@@ -147,13 +175,14 @@ public class AgentPanel {
             public void actionPerformed(ActionEvent e) {
                 SecretAgent agent = new SecretAgent();
                 JFrame iFrame = new JFrame();
-                iFrame.setTitle("Add agent");
+                iFrame.setTitle(bundle.getString("CreateAgent"));
                 iFrame.add(new AddAgent(agent, agentModel, iFrame).getPanel1());
                 iFrame.setContentPane(new AddAgent(agent, agentModel, iFrame).getPanel1());
                 iFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-                iFrame.setPreferredSize(new Dimension(700, 200));
+                iFrame.setPreferredSize(new Dimension(730, 180));
 
                 iFrame.pack();
+                iFrame.setLocationRelativeTo(null);
                 iFrame.setVisible(true);
             }
         });
@@ -176,9 +205,10 @@ public class AgentPanel {
                 iFrame.add(new UpdateAgent(agent,agentModel,iFrame).getPanel1());
                 iFrame.setContentPane(new UpdateAgent(agent,agentModel,iFrame).getPanel1());
                 iFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-                iFrame.setPreferredSize(new Dimension(600, 200));
+                iFrame.setPreferredSize(new Dimension(740, 180));
 
                 iFrame.pack();
+                iFrame.setLocationRelativeTo(null);
                 iFrame.setVisible(true);
             }
         });
@@ -235,6 +265,7 @@ public class AgentPanel {
             }
         }
     }
+
     private class ListAliveAgentsSwingWorker extends SwingWorker<List<SecretAgent>, Void> {
 
         @Override

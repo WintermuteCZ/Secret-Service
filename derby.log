@@ -1,13 +1,13 @@
 ----------------------------------------------------------------
-Fri Jun 05 01:54:33 CEST 2015:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.11.1.1 - (1616546): instance a816c00e-014d-c0ff-69ec-00000673cf70 
-on database directory memory:C:\Users\Martina\Documents\MUNI\4.semestr\PV168\ProjectFolder\Secret-Service\agencydb-test with class loader sun.misc.Launcher$AppClassLoader@27c170f0 
-Loaded from file:/C:/Users/Martina/.m2/repository/org/apache/derby/derby/10.11.1.1/derby-10.11.1.1.jar
+Mon Jun 08 14:33:33 CEST 2015:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.11.1.1 - (1616546): instance a816c00e-014d-d329-5d43-000000c483c8 
+on database directory memory:C:\Users\Vitus-ad\IdeaProjects\Secret Service\agencydb-test with class loader sun.misc.Launcher$AppClassLoader@1c170f0 
+Loaded from file:/C:/Users/Vitus-ad/.m2/repository/org/apache/derby/derby/10.11.1.1/derby-10.11.1.1.jar
 java.vendor=Oracle Corporation
-java.runtime.version=1.8.0_31-b13
-user.dir=C:\Users\Martina\Documents\MUNI\4.semestr\PV168\ProjectFolder\Secret-Service
-os.name=Windows 7
-os.arch=amd64
-os.version=6.1
+java.runtime.version=1.8.0_20-b26
+user.dir=C:\Users\Vitus-ad\IdeaProjects\Secret Service
+os.name=Windows 8.1
+os.arch=x86
+os.version=6.3
 derby.system.home=null
 Database Class Loader started - derby.database.classpath=''

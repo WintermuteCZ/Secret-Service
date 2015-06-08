@@ -3,8 +3,8 @@ package web;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import secret_service.AgentManager;
-import secret_service.SecretAgent;
+import cz.muni.fi.pv168.secret_service.AgentManager;
+import cz.muni.fi.pv168.secret_service.SecretAgent;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -104,7 +104,7 @@ public class AgentServlet extends HttpServlet {
                     return;
                 }
             case "/update":
-                //TODO
+                //bonus
                 return;
             default:
                 log.error("Unknown action " + action);

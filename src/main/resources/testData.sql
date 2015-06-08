@@ -1,1 +1,0 @@
-INSERT INTO agent (name, gender, clearance, birth, death) VALUES ('Bond', 'm', 5, '2000-2-3', null)

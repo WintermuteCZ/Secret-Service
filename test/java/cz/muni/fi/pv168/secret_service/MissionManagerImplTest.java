@@ -1,9 +1,11 @@
-package secret_service;
+package cz.muni.fi.pv168.secret_service;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import other.DBUtils;
 import other.ServiceFailureException;
 import other.ValidationException;
@@ -22,6 +24,8 @@ public class MissionManagerImplTest {
     private MissionManagerImpl missionManager;
     private DataSource ds;
 
+    final static Logger log = LoggerFactory.getLogger(MissionManagerImplTest.class);
+
     private static DataSource prepareDataSource() throws SQLException {
         BasicDataSource ds = new BasicDataSource();
         ds.setUrl("jdbc:derby:memory:missionmanager-test;create=true");
@@ -30,6 +34,7 @@ public class MissionManagerImplTest {
 
     @Before
     public void setUp() throws SQLException {
+        log.info("mission manager test setting up database");
         ds = prepareDataSource();
         DBUtils.executeSqlScript(ds, MissionManager.class.getResourceAsStream("/createTables.sql"));
         missionManager = new MissionManagerImpl(ds);
@@ -37,11 +42,13 @@ public class MissionManagerImplTest {
 
     @After
     public void tearDown() throws SQLException {
+        log.info("mission manager test dropping up database");
         DBUtils.executeSqlScript(ds, MissionManager.class.getResourceAsStream("/dropTables.sql"));
     }
 
     @Test
     public void testRetrieveMission() throws Exception {
+        log.info("testing retrieving mission");
         Mission mission = newMission("Assassination", "Oz", 5, null, null);
         missionManager.createMission(mission);
 
@@ -56,6 +63,7 @@ public class MissionManagerImplTest {
 
     @Test
     public void testUpdateMission() throws Exception {
+        log.info("testing updating mission");
         Mission mission = newMission("Assassination", "Oz", 5, null, "Kill the wizard as violently as possible");
         missionManager.createMission(mission);
 
@@ -110,6 +118,7 @@ public class MissionManagerImplTest {
 
     @Test
     public void testUpdateMissionWrongAttributes() throws Exception {
+        log.info("testing updating mission with wrong attributes");
         Mission mission = newMission("Assassination", "Oz", 5, LocalDate.of(2000,1,1), "Kill the wizard as violently as possible");
         missionManager.createMission(mission);
 
@@ -179,6 +188,7 @@ public class MissionManagerImplTest {
 
     @Test
     public void testDeleteMission() throws Exception {
+        log.info("testing deleting mission");
         Mission mission1 = newMission("Assassination", "Oz", 5, null, null);
         missionManager.createMission(mission1);
 
@@ -192,6 +202,7 @@ public class MissionManagerImplTest {
 
     @Test
     public void testDeleteMissionWrongAttributes() throws Exception {
+        log.info("testing deleting mission with wrong attributes");
         Mission mission = newMission("Assassination", "Oz", 5, null, null);
         missionManager.createMission(mission);
 
@@ -230,6 +241,7 @@ public class MissionManagerImplTest {
     @Test
     public void testFindAllMissions() throws Exception {
         //assertThat(missionManager.findAllMissions(), is(empty())); <- useless, but good to know
+        log.info("testing finding all missions");
 
         Mission mission1 = newMission("Assassination", "Oz", 5, null, null);
         missionManager.createMission(mission1);
@@ -243,6 +255,7 @@ public class MissionManagerImplTest {
 
     @Test
     public void testFindAvailableMissions() throws Exception {
+        log.info("testing finding available missions");
         Mission expectedMission = newMission("Assassination", "Oz", 5, null, null);
         missionManager.createMission(expectedMission);
 
@@ -256,6 +269,7 @@ public class MissionManagerImplTest {
 
     @Test
     public void testFindCompletedMissions() throws Exception {
+        log.info("testing finding completed missions");
         Mission expectedMission = newMission("Assassination", "Oz", 5, LocalDate.of(2000,1,1), null);
         missionManager.createMission(expectedMission);
 

@@ -3,7 +3,7 @@ package gui;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import secret_service.*;
+import cz.muni.fi.pv168.secret_service.*;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -34,7 +34,6 @@ public class RemoveAgentFromMission {
 
     public RemoveAgentFromMission(SecretAgent agent, JFrame iFrame) {
         table1.setModel(new MissionTableModel());
-        //table1.setDefaultRenderer(Color.class, new ColorCellRenderer());
         this.missionModel = (MissionTableModel) table1.getModel();
         BasicDataSource ds = new BasicDataSource();
         ds.setUrl("jdbc:derby:memory:agencydb-test;create=true");
@@ -43,14 +42,15 @@ public class RemoveAgentFromMission {
         secretServiceManager.findMissionsWithAgent(agent).forEach(missionModel::addMission);
 
 
-        /*JFrame frame = new JFrame();
+        /* Jak spravne zavrit iFrame, pokud pocet misi = 0?
+
         int count = table1.getRowCount();
         if (count == 0) {
+            JFrame frame = new JFrame();
             JOptionPane.showMessageDialog(frame, bundle.getString("ErrorNoMissions"));
-            iFrame.dispose();
-            //return;
-        }
-        */
+            frame.dispose();
+            return;
+        }*/
 
         backButton.addActionListener(new ActionListener() {
             @Override

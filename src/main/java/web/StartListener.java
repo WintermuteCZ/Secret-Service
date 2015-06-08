@@ -4,9 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import secret_service.AgentManager;
-import secret_service.MissionManager;
-import secret_service.SpringConfig;
+import cz.muni.fi.pv168.secret_service.AgentManager;
+import cz.muni.fi.pv168.secret_service.MissionManager;
+import cz.muni.fi.pv168.secret_service.SpringConfig;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;

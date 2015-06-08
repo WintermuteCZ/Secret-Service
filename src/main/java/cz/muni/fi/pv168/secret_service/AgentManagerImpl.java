@@ -1,4 +1,4 @@
-package secret_service;
+package cz.muni.fi.pv168.secret_service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,23 +47,30 @@ public class AgentManagerImpl implements AgentManager {
     };
 
     static private void validate(SecretAgent secretAgent) {
+        log.debug("validate ({})", secretAgent);
         if (secretAgent == null) {
-            throw new IllegalArgumentException("mission is null");
+            log.error("agent is null({})", secretAgent);
+            throw new IllegalArgumentException("agent is null");
         }
         if (secretAgent.getName() == null) {
+            log.error("name is null({})", secretAgent);
             throw new ValidationException("name is null");
         }
         if (secretAgent.getGender() == null) {
+            log.error("gender is null({})", secretAgent);
             throw new ValidationException("gender is null");
         }
         if (secretAgent.getClearanceLevel() < 0) {
+            log.error("clearance level is negative number({})", secretAgent);
             throw new ValidationException("clearance level is negative number");
         }
         if (secretAgent.getDateOfBirth() == null) {
+            log.error("date of birth is null({})", secretAgent);
             throw new ValidationException("date of birth is null");
         }
         if (secretAgent.getDateOfDeath() != null) {
             if (secretAgent.getDateOfDeath().isBefore(secretAgent.getDateOfBirth())) {
+                log.error("date of death is before date of birth({})", secretAgent);
                 throw new ValidationException("date of death is before date of birth");
             }
         }
@@ -74,6 +81,7 @@ public class AgentManagerImpl implements AgentManager {
         log.debug("createAgent({})", secretAgent);
         validate(secretAgent);
         if (secretAgent.getId() != null) {
+            log.error("agent id already set({})", secretAgent);
             throw new ServiceFailureException("agent id already set");
         }
 
@@ -93,10 +101,12 @@ public class AgentManagerImpl implements AgentManager {
         log.debug("updateAgent({})", secretAgent);
         validate(secretAgent);
         if (secretAgent.getId() == null) {
+            log.error("agent id is null({})", secretAgent);
             throw new IllegalArgumentException("agent id is null");
         }
         if (findAgentByID(secretAgent.getId()) != null) {
             if (findAgentByID(secretAgent.getId()).getDateOfDeath() != null && secretAgent.getDateOfDeath() == null) {
+                log.error("valid date of death changed to null({})", secretAgent);
                 throw new ServiceFailureException("we don't have zombie agents (yet)");
             }
         }
@@ -106,18 +116,20 @@ public class AgentManagerImpl implements AgentManager {
                         secretAgent.getDateOfDeath() == null ? null : secretAgent.getDateOfDeath().toString(),
                         secretAgent.getClearanceLevel(), secretAgent.getId());
         if(n!=1) {
+            log.error("error updating agent({})", secretAgent);
             throw new ServiceFailureException("agent " + secretAgent + " not updated");
         }
     }
 
     @Override
     public void deleteAgent(SecretAgent secretAgent) throws ServiceFailureException, IllegalArgumentException {
-
         log.debug("deleteAgent({})", secretAgent);
         if (secretAgent == null) {
+            log.error("agent is null({})", secretAgent);
             throw new IllegalArgumentException("agent is null");
         }
         if (secretAgent.getId() == null) {
+            log.error("agent id is null({})", secretAgent);
             throw new IllegalArgumentException("agent id is null");
         }
         transaction.execute(transactionStatus -> {
@@ -125,6 +137,7 @@ public class AgentManagerImpl implements AgentManager {
 
             int n = jdbc.update("DELETE FROM agent WHERE ID = ?", secretAgent.getId());
             if (n != 1) {
+                log.error("error deleting agent({})", secretAgent);
                 throw new ServiceFailureException("agent " + secretAgent + " not deleted");
             }
             return null;
@@ -147,6 +160,7 @@ public class AgentManagerImpl implements AgentManager {
     public SecretAgent findAgentByID(Long id) throws ServiceFailureException, IllegalArgumentException {
         log.debug("findAgent({})", id);
         if (id == null) {
+            log.error("id is null");
             throw new IllegalArgumentException("id is null");
         }
         List<SecretAgent> list = jdbc.query("SELECT ID, name, gender, birth, death, clearance FROM agent WHERE id = ?", agentMapper, id);

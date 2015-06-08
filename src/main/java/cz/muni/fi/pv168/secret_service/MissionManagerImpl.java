@@ -1,4 +1,4 @@
-package secret_service;
+package cz.muni.fi.pv168.secret_service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,16 +41,21 @@ public class MissionManagerImpl implements MissionManager {
     };
 
     static private void validate(Mission mission) {
+        log.debug("validate ({})", mission);
         if (mission == null) {
+            log.error("mission is null({})", mission);
             throw new IllegalArgumentException("mission is null");
         }
         if (mission.getTitle() == null) {
+            log.error("title is null({})", mission);
             throw new ValidationException("title is null");
         }
         if (mission.getCountry() == null) {
+            log.error("country is null({})", mission);
             throw new ValidationException("country is null");
         }
         if (mission.getRequiredClearance() < 0) {
+            log.error("required clearance is too low({})", mission);
             throw new ValidationException("required clearance is too low");
         }
     }
@@ -60,6 +65,7 @@ public class MissionManagerImpl implements MissionManager {
         log.debug("createMission({})", mission);
         validate(mission);
         if (mission.getId() != null) {
+            log.error("mission id is already set({})", mission);
             throw new ServiceFailureException("mission id already set");
         }
 
@@ -79,10 +85,12 @@ public class MissionManagerImpl implements MissionManager {
         log.debug("updateMission({})", mission);
         validate(mission);
         if (mission.getId() == null) {
-            throw new IllegalArgumentException("grave id is null");
+            log.error("mission id is null({})", mission);
+            throw new IllegalArgumentException("mission id is null");
         }
         if (findMissionByID(mission.getId()) != null) {
             if (findMissionByID(mission.getId()).getDateOfCompletion() != null && mission.getDateOfCompletion() == null) {
+                log.error("valid date completion changed to null({})", mission);
                 throw new ServiceFailureException("missions can't be undone");
             }
         }
@@ -91,6 +99,7 @@ public class MissionManagerImpl implements MissionManager {
                 mission.getDateOfCompletion() == null ? null : mission.getDateOfCompletion().toString(),
                 mission.getRequiredClearance(), mission.getId());
         if(n!=1) {
+            log.error("error updating mission({})", mission);
             throw new ServiceFailureException("mission " + mission + " not updated");
         }
     }
@@ -99,13 +108,16 @@ public class MissionManagerImpl implements MissionManager {
     public void deleteMission(Mission mission) throws ServiceFailureException, IllegalArgumentException {
         log.debug("deleteMission({})", mission);
         if (mission == null) {
+            log.error("mission is null({})", mission);
             throw new IllegalArgumentException("mission is null");
         }
         if (mission.getId() == null) {
+            log.error("mission id is null({})", mission);
             throw new IllegalArgumentException("mission id is null");
         }
         int n = jdbc.update("DELETE FROM mission WHERE ID = ?", mission.getId());
         if(n!=1) {
+            log.error("error deleting mission({})", mission);
             throw new ServiceFailureException("mission " + mission + " not deleted");
         }
     }
@@ -132,6 +144,7 @@ public class MissionManagerImpl implements MissionManager {
     public Mission findMissionByID(Long id) throws ServiceFailureException, IllegalArgumentException {
         log.debug("findMission({})", id);
         if (id == null) {
+            log.error("id is null");
             throw new IllegalArgumentException("id is null");
         }
         List<Mission> list = jdbc.query("SELECT ID, title, country, description, completion, reqClearance FROM mission WHERE ID = ?", missionMapper, id);

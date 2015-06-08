@@ -4,7 +4,8 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import other.DBUtils;
-import secret_service.AgentManager;
+import cz.muni.fi.pv168.secret_service.AgentManager;
+import other.ServiceFailureException;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,7 +28,6 @@ public class BaseForm {
         ds.setUrl("jdbc:derby:memory:agencydb-test;create=true");
 
         DBUtils.executeSqlScript(ds, AgentManager.class.getResourceAsStream("/createTables.sql"));
-        Locale.setDefault(new Locale("cs", "CZ"));
         tabbedPane1.add(bundle.getString("AgentManagement"), new AgentPanel().getPanel1());
         tabbedPane1.add(bundle.getString("MissionManagement"), new MissionPanel().getPanel1());
     }
@@ -39,6 +39,12 @@ public class BaseForm {
                 log.debug("BaseForm start({})");
                 JFrame frame = new JFrame("SecretService");
                 frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+                try {
+                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                } catch (Exception e) {
+                    log.error("look and feel setup failed");
+                    throw new ServiceFailureException(e);
+                }
 
                 try {
                     frame.setContentPane(new BaseForm().tabbedPane1);
@@ -47,9 +53,9 @@ public class BaseForm {
                 }
 
                 frame.setPreferredSize(new Dimension(800, 600));
-                //frame.setJMenuBar(createMenu());
 
                 frame.pack();
+                frame.setLocationRelativeTo(null);
                 frame.setVisible(true);
             }
         });
