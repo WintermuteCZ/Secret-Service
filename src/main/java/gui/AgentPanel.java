@@ -1,12 +1,12 @@
 package gui;
 
-import cz.muni.fi.pv168.secret_service.SecretService;
+import secret_service.SecretService;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import cz.muni.fi.pv168.secret_service.AgentManager;
-import cz.muni.fi.pv168.secret_service.AgentManagerImpl;
-import cz.muni.fi.pv168.secret_service.SecretAgent;
+import secret_service.AgentManager;
+import secret_service.AgentManagerImpl;
+import secret_service.SecretAgent;
 import other.DBUtils;
 import other.ServiceFailureException;
 

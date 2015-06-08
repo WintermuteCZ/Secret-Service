@@ -1,6 +1,6 @@
 package gui;
 
-import cz.muni.fi.pv168.secret_service.Mission;
+import secret_service.Mission;
 import javax.swing.table.AbstractTableModel;
 import java.time.LocalDate;
 import java.util.ArrayList;

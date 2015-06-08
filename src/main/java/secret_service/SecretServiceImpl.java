@@ -1,4 +1,4 @@
-package cz.muni.fi.pv168.secret_service;
+package secret_service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,8 +8,8 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 import other.ServiceFailureException;
 
-import static cz.muni.fi.pv168.secret_service.AgentManagerImpl.agentMapper;
-import static cz.muni.fi.pv168.secret_service.MissionManagerImpl.missionMapper;
+import static secret_service.AgentManagerImpl.agentMapper;
+import static secret_service.MissionManagerImpl.missionMapper;
 
 import javax.sql.DataSource;
 import java.util.List;

@@ -3,8 +3,8 @@ package web;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import cz.muni.fi.pv168.secret_service.AgentManager;
-import cz.muni.fi.pv168.secret_service.SecretAgent;
+import secret_service.AgentManager;
+import secret_service.SecretAgent;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -32,22 +32,19 @@ public class AgentServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //aby fungovala čestina z formuláře
         request.setCharacterEncoding("utf-8");
-        //akce podle přípony v URL
         String action = request.getPathInfo();
         switch (action) {
             case "/add":
-                //načtení POST parametrů z formuláře
                 String name = request.getParameter("name");
                 String gender = request.getParameter("gender");
                 String birth = request.getParameter("birth");
                 String death = request.getParameter("death");
                 String clearance = request.getParameter("clearance");
-                //kontrola vyplnění hodnot
+
                 if (name == null || name.length() == 0 || gender == null || gender.length() == 0 || birth == null ||
                         birth.length() == 0 || clearance == null || clearance.length() == 0) {
-                    request.setAttribute("chyba", "Je nutné vyplnit všechny hodnoty kromě smrti!");
+                    request.setAttribute("chyba", "Fill in more things");
                     showAgentsList(request, response);
                     return;
                 }
@@ -121,9 +118,6 @@ public class AgentServlet extends HttpServlet {
         return (AgentManager) getServletContext().getAttribute("agentManager");
     }
 
-    /**
-     * Stores the list of books to request attribute "agents" and forwards to the JSP to display it.
-     */
     private void showAgentsList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             request.setAttribute("agents", getAgentManager().findAllAgents());

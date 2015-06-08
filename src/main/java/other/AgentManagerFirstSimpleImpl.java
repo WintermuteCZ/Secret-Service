@@ -2,9 +2,9 @@ package other;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import cz.muni.fi.pv168.secret_service.AgentManager;
-import cz.muni.fi.pv168.secret_service.SecretAgent;
-import cz.muni.fi.pv168.secret_service.SecretServiceImpl;
+import secret_service.AgentManager;
+import secret_service.SecretAgent;
+import secret_service.SecretServiceImpl;
 
 import javax.sql.DataSource;
 import java.sql.*;

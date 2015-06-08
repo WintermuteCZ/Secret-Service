@@ -9,6 +9,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import other.ServiceFailureException;
+import secret_service.AgentManager;
+import secret_service.AgentManagerImpl;
+import secret_service.SecretAgent;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;

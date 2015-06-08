@@ -4,7 +4,7 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import other.DBUtils;
-import cz.muni.fi.pv168.secret_service.AgentManager;
+import secret_service.AgentManager;
 import other.ServiceFailureException;
 
 import javax.swing.*;

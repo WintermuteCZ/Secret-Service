@@ -9,6 +9,9 @@ import org.slf4j.LoggerFactory;
 import other.DBUtils;
 import other.ServiceFailureException;
 import other.ValidationException;
+import secret_service.Mission;
+import secret_service.MissionManager;
+import secret_service.MissionManagerImpl;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;

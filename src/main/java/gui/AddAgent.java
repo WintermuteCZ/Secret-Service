@@ -3,7 +3,9 @@ package gui;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import cz.muni.fi.pv168.secret_service.*;
+import secret_service.AgentManager;
+import secret_service.AgentManagerImpl;
+import secret_service.SecretAgent;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
